@@ -8,29 +8,22 @@ const eslintConfig = defineConfig([
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
     rules: {
-      "@typescript-eslint/no-floating-promises": "warn",
       "import/order": [
         "error",
         {
           groups: [
-            ["builtin", "external"],
-            "internal",
-            "parent",
-            "sibling",
-            "index",
+            ["external", "builtin", "internal"],
+            ["parent", "sibling", "index"],
           ],
           pathGroups: [
             {
               pattern: "@/**",
-              group: "internal",
+              group: "external",
               position: "after",
             },
           ],
+          pathGroupsExcludedImportTypes: ["builtin"],
           "newlines-between": "always",
-          alphabetize: {
-            order: "asc",
-            caseInsensitive: true,
-          },
         },
       ],
       "import/newline-after-import": "error",

@@ -1,11 +1,11 @@
-import client from "@/lib/db/client"
-import { TLoginData } from "@/types"
-import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
+import type { AuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 
-import type { AuthOptions, User } from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
+import client from "@/lib/db/client";
+import { HashVerify } from "@/utils";
 
-const SECRET = process.env.NEXTAUTH_SECRET || ""
+const SECRET = process.env.NEXTAUTH_SECRET || "";
 
 export default {
   adapter: MongoDBAdapter(client),
@@ -13,32 +13,42 @@ export default {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        id: {},
-        name: {},
-        username: {},
+        username: { label: "Username" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         try {
-          if (!credentials) return null
-
-          const data: TLoginData = {
-            id: Number(credentials.id),
-            name: String(credentials.name),
-            username: String(credentials.username),
+          if (!credentials?.username || !credentials?.password) {
+            return null;
           }
 
-          if (!data.username) return null
+          const db = (await client).db();
+          const usersCollection = db.collection("users");
 
-          const currentUser: User = {
-            id: String(data.id),
-            name: data.name,
-            username: data.username,
+          const user = await usersCollection.findOne({
+            username: credentials.username,
+          });
+
+          if (!user) {
+            return null;
           }
 
-          return currentUser
+          const isMatch = await HashVerify(credentials.password, user.password);
+
+          if (!isMatch) {
+            return null;
+          }
+
+          return {
+            id: user._id.toString(),
+            role: user.role,
+            name: user.name,
+            username: user.username,
+            photo: user.photo,
+          };
         } catch (error) {
-          console.error("Authorization error:", error)
-          return null
+          console.error("Authorization error:", error);
+          return null;
         }
       },
     }),
@@ -46,26 +56,32 @@ export default {
   callbacks: {
     async jwt({ token, user, trigger, session }) {
       if (user) {
-        token.id = user.id
-        token.name = user.name
-        token.username = user.username
+        token.id = user.id;
+        token.role = user.role;
+        token.name = user.name;
+        token.username = user.username;
+        token.photo = user.photo;
       }
 
       if (trigger === "update" && session?.user) {
-        if (session.user.name) token.name = session.user.name
-        if (session.user.username) token.username = session.user.username
+        if (session.user.name) token.name = session.user.name;
+        if (session.user.role) token.role = session.user.role;
+        if (session.user.username) token.username = session.user.username;
+        if (session.user.photo) token.photo = session.user.photo;
       }
-      return token
+      return token;
     },
     async session({ session, token }) {
-      session.user.id = token.sub ?? "xx"
-      session.user.name = token.name
-      session.user.username = token.username || "email"
-      return session
+      session.user.id = token.sub ?? "";
+      session.user.role = token.role;
+      session.user.name = token.name;
+      session.user.username = token.username ?? "";
+      session.user.photo = token.photo;
+      return session;
     },
   },
   pages: {
-    signIn: "/customer/login",
+    signIn: "/login",
   },
   cookies: {
     pkceCodeVerifier: {
@@ -85,4 +101,4 @@ export default {
   jwt: {
     secret: SECRET,
   },
-} satisfies AuthOptions
+} satisfies AuthOptions;

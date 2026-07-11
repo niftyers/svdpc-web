@@ -1,13 +1,14 @@
-import MetaConfig from "@/meta.json"
-import { Metadata } from "next"
+import { Metadata } from "next";
+
+import MetaConfig from "@/meta.json";
 
 export const metadata: Metadata = {
   title: `Dashboard - ${MetaConfig.title}`,
   description: MetaConfig.description,
-}
+};
 
 const PageDashboard = () => {
-  return <div>Dashboard</div>
-}
+  return <div>Dashboard</div>;
+};
 
-export default PageDashboard
+export default PageDashboard;

@@ -1,4 +1,4 @@
-import Image from "next/image"
+import Image from "next/image";
 
 export default function PageLoading() {
   return (
@@ -10,7 +10,7 @@ export default function PageLoading() {
             alt="Greenland Bio Organic Fertilizer"
             width={400}
             height={160}
-            priority
+            priority={false}
             className="h-auto w-full"
           />
         </div>
@@ -22,5 +22,5 @@ export default function PageLoading() {
         </p>
       </div>
     </div>
-  )
+  );
 }

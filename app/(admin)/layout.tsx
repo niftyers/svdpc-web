@@ -1,13 +1,18 @@
-import { ReactNode } from "react"
+import { ReactNode } from "react";
 
-import { AuthProvider } from "@/provider/auth"
+import { SidebarProvider, SidebarTrigger } from "@/ui/shadcn/sidebar";
+import { AppSidebar } from "@/ui/shared/layout/_sidebar";
 
 export default function AdminRootLayout({ children }: { children: ReactNode }) {
   return (
-    <AuthProvider>
-      <div className="flex min-h-screen flex-col">
-        <main className="relative">{children}</main>
-      </div>
-    </AuthProvider>
-  )
+    <div className="flex min-h-screen flex-col">
+      <SidebarProvider>
+        <AppSidebar />
+        <main className="relative">
+          <SidebarTrigger />
+          {children}
+        </main>
+      </SidebarProvider>
+    </div>
+  );
 }

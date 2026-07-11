@@ -1,24 +1,27 @@
-import { Geist, Geist_Mono } from "next/font/google"
+import { Check, CircleX, Info, MessageCircleWarning } from "lucide-react";
+import { Geist, Geist_Mono } from "next/font/google";
 
-import { SonnerProvider } from "@/provider"
-import { QueryProviders } from "@/provider/query"
-import { RouteProviders } from "@/provider/route"
-import { TooltipProvider } from "@/ui/shadcn/tooltip"
-import { cn } from "@/utils/_tw"
-import { Check, CircleX, Info, MessageCircleWarning } from "lucide-react"
-import "./globals.css"
+import {
+  AuthProvider,
+  QueryProviders,
+  RouteProviders,
+  SonnerProvider,
+} from "@/provider";
+import { TooltipProvider } from "@/ui/shadcn/tooltip";
+import { cn } from "@/utils/_tw";
+import "./globals.css";
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
-})
+});
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html
@@ -47,9 +50,11 @@ export default function RootLayout({
           richColors
         />
         <QueryProviders>
-          <TooltipProvider>{children}</TooltipProvider>
+          <AuthProvider>
+            <TooltipProvider>{children}</TooltipProvider>
+          </AuthProvider>
         </QueryProviders>
       </body>
     </html>
-  )
+  );
 }

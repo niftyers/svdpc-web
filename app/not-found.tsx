@@ -1,12 +1,12 @@
-import { Metadata } from "next"
-import Link from "next/link"
+import { Metadata } from "next";
+import Link from "next/link";
 
-import MetaConfig from "@/meta.json"
-import { Button } from "@/ui/shadcn/button"
+import MetaConfig from "@/meta.json";
+import { Button } from "@/ui/shadcn/button";
 
 export const metadata: Metadata = {
   title: `Page Not Found - ${MetaConfig.title}`,
-}
+};
 
 export default function PageNotFound() {
   return (
@@ -32,5 +32,5 @@ export default function PageNotFound() {
         </div>
       </div>
     </div>
-  )
+  );
 }
