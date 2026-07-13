@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import MetaConfig from "@/meta.json";
 import Logo from "@/public/logo.png";
-import { Card, CardContent, CardFooter, CardHeader } from "@/ui/shadcn/card";
+import { Card, CardContent, CardHeader } from "@/ui/shadcn/card";
 import { FormLogin } from "@/ui/shared/form";
 
 export const metadata: Metadata = {
@@ -30,14 +30,9 @@ const PageLogin = () => {
             Computer Lab Monitoring
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pb-6">
           <FormLogin />
         </CardContent>
-        <CardFooter className="flex justify-center">
-          <p className="text-[10px] text-zinc-500">
-            Contact administrator if you have issues logging in
-          </p>
-        </CardFooter>
       </Card>
     </div>
   );
